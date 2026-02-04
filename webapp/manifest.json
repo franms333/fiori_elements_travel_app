@@ -60,7 +60,8 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.fe.templates": {}
+        "sap.fe.templates": {},
+        "sap.f": {}
       }
     },
     "contentDensities": {
@@ -92,22 +93,37 @@
       "css": []
     },
     "routing": {
-      "config": {},
+      "config": {
+        "flexibleColumnLayout": {
+          "defaultTwoColumnLayoutType": "TwoColumnsBeginExpanded",
+          "defaultThreeColumnLayoutType": "ThreeColumnsMidExpanded"
+        },
+        "routerClass": "sap.f.routing.Router"
+      },
       "routes": [
         {
           "pattern": ":?query:",
           "name": "TravelList",
-          "target": "TravelList"
+          "target": [
+            "TravelList"
+          ]
         },
         {
           "pattern": "Travel({key}):?query:",
           "name": "TravelObjectPage",
-          "target": "TravelObjectPage"
+          "target": [
+            "TravelList",
+            "TravelObjectPage"
+          ]
         },
         {
           "pattern": "Travel({key})/_Booking({key2}):?query:",
           "name": "BookingObjectPage",
-          "target": "BookingObjectPage"
+          "target": [
+            "TravelList",
+            "TravelObjectPage",
+            "BookingObjectPage"
+          ]
         }
       ],
       "targets": {
@@ -125,28 +141,6 @@
                     "route": "TravelObjectPage"
                   }
                 }
-              },
-              "views": {
-                  "paths": [
-                    {
-                        "key": "tab2",
-                        "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#SPV_All"
-                    },
-                    { 
-                        "key": "tab3",
-                        "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#SPV_Accepted"
-                    },
-                    {
-                        "key": "tab1",
-                        "annotationPath":        "com.sap.vocabularies.UI.v1.SelectionVariant#Open"
-                    },
-                    {
-                        "key": "tab4",
-                        "entitySet": "travel_chart",
-                        "annotationPath":        "com.sap.vocabularies.UI.v1.SelectionVariant#SV_All"
-                    }
-                ],
-                "showCounts" : false
               },
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem": {
@@ -170,7 +164,9 @@
                 }
               }
             }
-          }
+          },
+          "controlAggregation": "beginColumnPages",
+          "contextPattern": ""
         },
         "TravelObjectPage": {
           "type": "Component",
@@ -188,7 +184,9 @@
                 }
               }
             }
-          }
+          },
+          "controlAggregation": "midColumnPages",
+          "contextPattern": "/Travel({key})"
         },
         "BookingObjectPage": {
           "type": "Component",
@@ -199,9 +197,17 @@
               "editableHeaderContent": false,
               "contextPath": "/Travel/_Booking"
             }
-          }
+          },
+          "controlAggregation": "endColumnPages",
+          "contextPattern": "/Travel({key})/_Booking({key2})"
         }
       }
+    },
+    "rootView": {
+      "viewName": "sap.fe.templates.RootContainer.view.Fcl",
+      "type": "XML",
+      "async": true,
+      "id": "appRootView"
     }
   },
   "sap.fiori": {
